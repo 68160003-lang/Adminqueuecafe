@@ -21,9 +21,7 @@ public class CafeQueueAdmin {
             System.out.println("The password is incorrect! Unable to log in");
             return;
         }
-
         System.out.println("Login successful!");
-
         boolean running = true;
 
         while (running) {
@@ -39,53 +37,37 @@ public class CafeQueueAdmin {
             String choice = scanner.nextLine();
 
             switch (choice) {
+
                 case "1":
                     if (queueList.size() >= MAX_QUEUE) {
                         System.out.println("[!] Queue capacity reached.");
+                        break;
+                    }
+                    System.out.print("Enter Customer Name : ");
+                    String name = scanner.nextLine().trim();
+                    System.out.print("Enter Service Time (HH:mm) : ");
+                    String time = scanner.nextLine().trim();
+
+                    if (name.isEmpty()) {
+                        System.out.println("[!] Customer name cannot be empty.");
+                        break;
+                    }
+                    if (!time.matches("([01][0-9]|2[0-3]):[0-5][0-9]")) {
+                        System.out.println("[!] Invalid time format.");
+                        break;
+                    }
+                    int hour = Integer.parseInt(time.substring(0, 2));
+                    int minute = Integer.parseInt(time.substring(3, 5));
+                    int totalMinutes = hour * 60 + minute;
+
+                    if (totalMinutes < 600 || totalMinutes > 1080) {
+                        System.out.println("[!] Booking time must be between 10:00 and 18:00.");
+                    } else if (timeList.contains(time)) {
+                        System.out.println("[!] This time is already booked.");
                     } else {
-                        System.out.print("Enter Customer Name : ");
-                        String name = scanner.nextLine().trim();
-
-                        System.out.print("Enter Service Time (HH:mm) : ");
-                        String time = scanner.nextLine().trim();
-
-                        if (!time.matches("([01][0-9]|2[0-3]):[0-5][0-9]")) {
-                            System.out.println("[!] Invalid time format.");
-                        } else {
-                            int hour = Integer.parseInt(time.substring(0, 2));
-                            int minute = Integer.parseInt(time.substring(3, 5));
-                            int totalMinutes = hour * 60 + minute;
-
-                            if (totalMinutes < 600 || totalMinutes > 1080) {
-                                System.out.println("[!] Booking time must be between 10:00 and 18:00.");
-                            } else if (timeList.contains(time)) {
-                                System.out.println("[!] This time is already booked.");
-                            } else if (name.isEmpty()) {
-                                System.out.println("[!] Customer name cannot be empty.");
-                            } else {
-                                queueList.add(name);
-                                timeList.add(time);
-                                System.out.println("[✓] Added successfully.");
-                            }
-                        }
-
-                        String[] t = time.split(":");
-                        int hour = Integer.parseInt(t[0]);
-                        int minute = Integer.parseInt(t[1]);
-
-                        int totalMinutes = hour * 60 + minute;
-
-                        if (totalMinutes < 600 || totalMinutes > 1080) {
-                            System.out.println("[!] Booking time must be between 10:00-18:00.");
-                        } else if (timeList.contains(time)) {
-                            System.out.println("[!] This time is already booked.");
-                        } else if (name.isEmpty()) {
-                            System.out.println("[!] Customer name cannot be empty.");
-                        } else {
-                            queueList.add(name);
-                            timeList.add(time);
-                            System.out.println("[✓] Added successfully.");
-                        }
+                        queueList.add(name);
+                        timeList.add(time);
+                        System.out.println("[✓] Added successfully.");
                     }
                     break;
 
@@ -97,12 +79,9 @@ public class CafeQueueAdmin {
                             System.out.println((i + 1) + ". "
                                     + queueList.get(i) + " | " + timeList.get(i));
                         }
-
                         System.out.print("Enter Queue Number to remove: ");
-
                         try {
                             int num = Integer.parseInt(scanner.nextLine()) - 1;
-
                             if (num >= 0 && num < queueList.size()) {
                                 servedList.add(queueList.remove(num));
                                 servedTimeList.add(timeList.remove(num));
@@ -129,26 +108,23 @@ public class CafeQueueAdmin {
 
                 case "4":
                     running = false;
-
                     System.out.println("=== DAILY QUEUE SUMMARY ===");
-
                     System.out.println("[ Served Customers ]");
+
                     for (int i = 0; i < servedList.size(); i++) {
                         System.out.println((i + 1) + ". "
                                 + servedList.get(i) + " | "
                                 + servedTimeList.get(i));
                     }
-
                     System.out.println("[ Remaining Customers ]");
+
                     for (int i = 0; i < queueList.size(); i++) {
                         System.out.println((i + 1) + ". "
                                 + queueList.get(i) + " | "
                                 + timeList.get(i));
                     }
-
                     System.out.println("Total Customers Today: "
                             + (servedList.size() + queueList.size()));
-
                     System.out.println("----- Queue System Closed -----");
                     break;
 
@@ -156,7 +132,6 @@ public class CafeQueueAdmin {
                     System.out.println("[!] Please select option 1-4 only");
             }
         }
-
         scanner.close();
     }
 }
