@@ -39,8 +39,8 @@ public class CafeQueueAdmin {
             switch (choice) {
 
                 case "1":
-                    if (queueList.size() >= MAX_QUEUE) {
-                        System.out.println("[!] Queue capacity reached.");
+                    if (queueList.size() + servedList.size() >= MAX_QUEUE) {
+                        System.out.println("[!] Daily queue capacity reached.");
                         break;
                     }
                     System.out.print("Enter Customer Name : ");
